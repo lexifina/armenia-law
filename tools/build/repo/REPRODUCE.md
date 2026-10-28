@@ -5,32 +5,29 @@ Everything in this history comes from ARLIS (www.arlis.am) and can be rebuilt fr
 ## What this build used
 
 - Retrieved on {{TODAY}}: {{LAWS}} laws ({{CONSTITUTIONS}} constitutions, {{CODES}} codes, {{LAWS_ORDINARY}} laws) and {{TEXTS}} texts (original acts plus consolidated texts).
-- Requests: about 870 search pages (6 orderings × 145 pages), {{LAWS}} law pages and {{TEXTS}} print views.
+- Pages used: about 870 search pages (6 orderings × 145 pages), {{LAWS}} law pages and {{TEXTS}} print views.
 
-## Fetch rate
+## What the build produced
 
 - {{COMMITS}} commits on `main`: {{ORIGINAL}} original acts, {{AMENDMENT}} amendments and this documentation commit. A further {{FUTURE_COMMITS}} are on `future`.
 - The sha256 of every downloaded text (gzip of the HTML as served) is in `data/texts-sha256.tsv`; the sha256 of that list is {{TEXTS_SHA256}}.
 - Build scripts, copied to `tools/build/`, with their sha256:
-  - `fetch.py` {{SHA_FETCH_PY}}
   - `parse_text.py` {{SHA_PARSE_TEXT_PY}}
   - `build.py` {{SHA_BUILD_PY}}
   - `docs.py` {{SHA_DOCS_PY}}
-- Tools: Python {{V_PYTHON}} with lxml {{V_LXML}}; {{V_GIT}}; {{V_CURL}}.
+- Tools: Python {{V_PYTHON}} with lxml {{V_LXML}}; {{V_GIT}}.
 
 ## Steps
 
 ```sh
 cd tools/build
-python fetch.py catalogue      # .cache/catalogue.json: search for types 1, 3, 5, 7 with exclude_changing_acts
-python fetch.py laws           # .cache/laws/<id>.json: each law's change history (amending act -> consolidated text)
-python fetch.py texts          # .cache/text/<id>.html.gz: print view of every original act and consolidated text
+# the retrieved texts (sha256 in data/texts-sha256.tsv), where build.py reads them
 python build.py ../../../armenia-law-rebuilt --today {{TODAY}}
 ```
 
-`--today` is the cache's retrieval day. It is required: it dates the documentation commit and divides `main` from `future`, so a rebuild never depends on the day it is run. The builder refuses to build into a directory that holds anything except an earlier build. On a rebuild it keeps the `origin` remote.
+`--today` is the retrieval day. It is required: it dates the documentation commit and divides `main` from `future`, so a rebuild never depends on the day it is run. The builder refuses to build into a directory that holds anything except an earlier build. On a rebuild it keeps the `origin` remote.
 
-ARLIS adds texts as laws change, so a later fetch gives a longer history. To rebuild this exact history, use texts whose sha256 match `data/texts-sha256.tsv`.
+ARLIS adds texts as laws change, so a later retrieval gives a longer history. To rebuild this exact history, use texts whose sha256 match `data/texts-sha256.tsv`.
 
 ## Decisions
 

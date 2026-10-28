@@ -57,13 +57,13 @@ ARLIS's consolidated texts are marked official or unofficial. This repository is
 - Before each push, `tools/in_force_on.py` is compared with ARLIS's own text for several articles and dates.
 - Every commit's trailers parse with `git interpret-trailers --parse`.
 - `main` has no merge commits, its commit dates never go backwards, and none of them is after the build day.
-- Two builds from the same cache give the same commit hashes.
+- Two builds from the same retrieved texts give the same commit hashes.
 
 The sha256 of every downloaded text is in [`data/texts-sha256.tsv`](data/texts-sha256.tsv). See [`REPRODUCE.md`](REPRODUCE.md).
 
 ## How it is built
 
-`tools/build/fetch.py` finds every Constitution, code and law through ARLIS's search, leaving out acts that only amend others. It then reads each law's change history, which pairs amending acts with consolidated texts, and downloads the print view of the original act and of every consolidated text. `parse_text.py` splits each text into articles and paragraphs. `build.py` compares each law's texts in date order and credits each change as above. It writes the whole history with one `git fast-import`. No AI model reads or writes any text, either in the build or in the checks.
+The record holds every Constitution, code and law found through ARLIS's search, leaving out acts that only amend others. For each law it uses the law's change history, which pairs amending acts with consolidated texts, and the print view of the original act and of every consolidated text. `parse_text.py` splits each text into articles and paragraphs. `build.py` compares each law's texts in date order and credits each change as above. It writes the whole history with one `git fast-import`. No AI model reads or writes any text, either in the build or in the checks.
 
 ## Licence
 

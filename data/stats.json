@@ -1,0 +1,23 @@
+{
+ "amending_acts": 13027,
+ "amendment": 13039,
+ "codes": 42,
+ "commits": 14423,
+ "constitutions": 4,
+ "evidence_caught_up": 608,
+ "evidence_edition": 46429,
+ "evidence_note": 30098,
+ "first": "1961-03-07",
+ "future_commits": 6,
+ "last": "2026-10-24",
+ "laws": 1388,
+ "laws_ordinary": 1342,
+ "not_incorporated": 513,
+ "original": 1383,
+ "retroactive": 2,
+ "texts": 14487,
+ "texts_sha256": "83c2c9ca44f38a49443f2cdcda4cd33accd48a9c03f0949e384d3f10c9c4bed0",
+ "today": "2026-10-28",
+ "unexplained": 0,
+ "unreadable": 3
+}

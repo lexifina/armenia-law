@@ -1,5 +1,7 @@
 # Armenian law, change by change
 
+Part of [lexifina/global-law](https://github.com/lexifina/global-law), one git history for every country's law: this is Armenia's national law, which global-law reads at `armenia/national/acts/`.
+
 The laws of the Republic of Armenia as a git repository: the Constitution, 42 codes and 1342 laws from [ARLIS](https://www.arlis.am), the official legal information system of the Republic of Armenia. Each article is its own file, with one paragraph per line. Every change is a commit credited to the act that made it and dated the day the changed text took effect, at noon Yerevan time. The text is the Armenian original, which is the authoritative text.
 
 On `main`, the record runs from 1961-03-07 to 2026-10-24 in 14423 commits, built from 14487 texts: each law's original act plus every consolidated text ARLIS made of it. A further 6 commits apply after the build day and sit on the `future` branch.

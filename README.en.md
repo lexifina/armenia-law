@@ -1,82 +1,85 @@
-# Armenian law, change by change
+# Armenia: law history in git
 
-[Հայերեն](README.md) · **English**
+**English** · **[Կամ կարդացեք հայերեն](README.md)**
 
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="data/effort-dark.svg">
 <img alt="Armenian law in this repository: what it holds, changes by the year they took effect, completeness against the official sources, and the correctness of what is held" src="data/effort-light.svg" width="880">
 </picture>
 
+The law of Armenia as a git history: one file per article, one commit per version on the day it took effect, and the act that made each change as the commit's author. `git blame` names the act behind every paragraph; `git log` lists every change to an article; picking a date gives the text in force that day.
+
 Part of [lexifina/global-law](https://github.com/lexifina/global-law), one git history for every country's law: this is Armenia's national law, which global-law reads at `armenia/national/acts/`.
 
-The laws of the Republic of Armenia as a git repository: the Constitution, 42 codes and 1342 laws from [ARLIS](https://www.arlis.am), the official legal information system of the Republic of Armenia. Each article is its own file, with one paragraph per line. Every change is a commit credited to the act that made it and dated the day the changed text took effect, at noon Yerevan time. The text is the Armenian original, which is the authoritative text.
+**What is in it now:** 42 codes and 1,337 laws from ARLIS, the official legal information system, and 4 acts ARLIS files as constitutions (the Constitution in its 1995, 2005 and 2015 texts, and the WHO Constitution), with 14,574 versions from 1961 to 2026-10-24. [`laws.csv`](laws.csv) lists every act read from ARLIS, with its link.
 
-On `main`, the record runs from 1961-03-07 to 2026-10-24 in 14423 commits, built from 14487 texts: each law's original act plus every consolidated text ARLIS made of it. A further 6 commits apply after the build day and sit on the `future` branch.
+Each act is in `<kind>/<year>/<number>/`, by the year it was adopted and its official number (`code/2004/ՀՕ-124-Ն/` is the ՀՀ աշխատանքային օրենսգիրք, the Labour Code, ՀՕ-124-Ն of 9 November 2004); acts without a number use their ARLIS id (`code/1961/id-5`). Each article is a file (`159.md`; article 327¹ is `327.1.md`), one paragraph per line. Until 2026-11-10 each folder was named by its ARLIS id (`code/51` is the Labour Code); `data/paths.json` maps every old name to its folder. `git blame` and `git log --follow` follow a file across that move; `git log` without `--follow` and `tools/in_force_on.py` need the old name for earlier versions.
 
-## A lawyer's questions as git commands
+The text is in Armenian, the authoritative original, as ARLIS publishes it. An English translation is not part of this record.
+
+## Questions as git commands
 
 | Question | Command |
 | --- | --- |
-| What did article 4 of the Law on Copyright and Related Rights say on 1 June 2012? | `python tools/in_force_on.py 2012-06-01 law/25161 4` |
-| The whole law on a date | `python tools/in_force_on.py 2012-06-01 law/25161` |
-| Which act last changed each paragraph of an article? | `git blame law/25161/4.md` |
-| Every change to an article, with the act behind it | `git log -p law/25161/4.md` |
-| The words that changed, not whole paragraphs | `git log -p --word-diff law/25161/4.md` |
-| Everything one act changed, across every law | `git log --author='ՀՕ-106-Ն' --stat` |
-| Every act that changed a law, in order | `git log --format='%(trailers:key=In-force,valueonly,separator=) %an' -- law/25161` |
-| What takes effect after today | `git log main..future` |
-| The list of laws, with their ARLIS links | [`laws.csv`](laws.csv) |
+| Every change to Article 159 of the Labour Code (annual leave) | `git log -p --word-diff --follow -- code/2004/ՀՕ-124-Ն/159.md` |
+| Which act wrote each line of Article 159? | `git blame code/2004/ՀՕ-124-Ն/159.md` |
+| Every version of the Labour Code, with the day each took effect | `git log --format="%h %(trailers:key=In-force,valueonly,separator=) %an" -- code/2004/ՀՕ-124-Ն code/51` |
+| Article 159 as in force on 1 January 2015 | `python tools/in_force_on.py 2015-01-01 code/51 159` |
 
-Use `tools/in_force_on.py` for "on this date" questions rather than `git log --before`. It picks the text by the `In-force:` trailer, so it is right in any time zone and for dates before 1970. If you use raw git, write the time out in full: `git rev-list -1 --before="2012-06-01T23:59:59+04:00" main`. In PowerShell, `git show "$(git rev-list -1 --before=... main):law/25161/4.md"` needs the quotes.
+**Outside git**, we also host this record publicly, for free:
 
-Folders are `constitution/`, `code/` and `law/`, and each law's folder is named after its ARLIS number, the `N` in `arlis.am/hy/acts/N`. Inside it there is one file per article (`4.md`, `22.1.md`; a superscript article such as 327¹ becomes `327.1.md`), one per appendix (`annex-1.md`), and `title.md` for the text before the first article. An article file starts with the Part and Chapter headings above it (`##`), then the heading line (`# Հոդված 4. …`), then one line per paragraph. Each article's own history note, such as `(4-րդ հոդվածը լրաց. 30.09.13 ՀՕ-106-Ն)`, is kept as a line, exactly as ARLIS prints it.
+- **[Ask Claude about Armenian law](https://global-law.lexifina.com/v1/try_claude?country=armenia)**: opens Claude with a first question ready.
+- **[Ask ChatGPT](https://global-law.lexifina.com/v1/try_chatgpt?country=armenia)**: the same question in ChatGPT.
+- **[Call the API in your browser](https://global-law.lexifina.com/v1/search_law?query=%D5%A1%D5%B4%D5%A5%D5%B6%D5%A1%D5%B4%D5%B5%D5%A1+%D5%A1%D6%80%D5%B1%D5%A1%D5%AF%D5%B8%D6%82%D6%80%D5%A4&jurisdictions=armenia)**: a search of Armenian law for "ամենամյա արձակուրդ" (annual leave), returned as JSON. See the [documentation here](https://lexifina.com/api/global-law).
 
-## The dates, and which one we use
+Both assistants read the record through the free Global law connector (MCP, `https://global-law.lexifina.com/mcp`); the first time, the chat gives you the link that adds it. Ask in Armenian or in English.
 
-ARLIS keeps every consolidated text it made of a law and gives each one its period of application, for example `Գործում է (01.09.2026-01.11.2026)`. **Commits are dated by the first day of that period.** That date decides which text governs a case, and it is the day the changes in that text took effect. The amending act's adoption date is in the `Enacted:` trailer. In 2 commits, the text applies from a day before the act was adopted (retroactive effect). Those commits keep the in-force date and show the adoption date.
+**Host it yourself easily.** All it takes is git and Python, and the tools run on your machine:
 
-The first commit of each law is its original act (`Kind: original`), dated the day the law took effect. Laws older than ARLIS's consolidated texts may be missing some intermediate texts. Their next commit can then carry several amendments at once (see "what author means").
+```sh
+git clone --depth 1 https://github.com/lexifina/global-law && cd global-law
+python3 tools/countries.py add armenia/national/acts
+python3 tools/law.py show 2026-01-01 armenia/national/acts/code/2004/ՀՕ-124-Ն/159.md
+```
 
-**Git cannot store dates before 1970.** Laws that took effect earlier (Soviet-era codes) are committed on 1970-01-01, one second apart and in order. Their real date is in the `In-force:` trailer, which `tools/in_force_on.py` reads.
+Opened in Claude Code, Cursor, VS Code or Codex, the clone also starts a local MCP server with the same tools ([MCP.md](https://github.com/lexifina/global-law/blob/main/MCP.md)).
 
-**Texts that apply after the build day** are on the branch `future`, which starts at the tip of `main` and is never merged into it, so `main` never shows text that is not yet law. After a rebuild, run `git fetch --force origin future`.
+## Dates
 
-## What "author" means
+Each commit is dated at noon, Asia/Yerevan, on the day the version took effect, and carries it in its `In-force:` trailer:
 
-The author of a commit is the act that made the change, at an address that cannot exist, for example `ՀՕ-106-Ն (30.09.2013) <ho-106-n-20130930@arlis.invalid>`. The number is the act's official number (ՀՕ = law of the Republic of Armenia) and the date is its adoption date. So `git blame` names, for each paragraph, the act that last wrote it. One commit holds everything one act changed on one day, across every law it touched.
+- for a consolidated text, the first day of the period of application ARLIS gives it (`Գործում է (01.09.2026-01.11.2026)`); the amending act's adoption day is in `Enacted:`;
+- for a law's first commit, its original act (`Kind: original`), the day of entry into force ARLIS gives;
+- git cannot store dates before 1970, so the 10 earlier commits (Soviet-era codes and laws) are dated from 1970-01-01, one second apart, with the real day in `In-force:`. Ask for a date with `tools/in_force_on.py`, not `git log --before`;
+- texts that apply after the build day (2026-10-28) are on the `future` branch, which is never merged into `main`.
 
-ARLIS pairs every consolidated text with the one amending act it was made for, and that act is credited (`Evidence: edition`). Where the changed article's own history note newly names that act, the evidence is `note`. Where the note instead newly names another amending act of the same law, one that has no consolidated text of its own, the change goes to the latest such act (`Evidence: note (no text of its own)`). Amending acts that ARLIS lists but never made a text for (513) are in [`data/not-incorporated.csv`](data/not-incorporated.csv). Their changes reach this record only through the next text that was made.
-
-Evidence counts by changed unit: note 30098, edition 46429, note with no text of its own 608. In all there are 1383 original acts and 13039 amendment commits by 13027 amending acts.
-
-Blame credits whole paragraphs. A paragraph changed by two acts names only the later one, so use `git log -p --word-diff` to see each act's words.
-
-## What it does not show
-
-- Sub-laws: government decisions, ministerial orders and other acts below the level of law. They are not in this build.
-- Texts ARLIS has not consolidated (see above), and texts it could not serve or we could not read (3, in [`data/unreadable.csv`](data/unreadable.csv)).
-- Laws whose only purpose is to amend others. They are the authors of commits here, not files. Their own transitional provisions, which say when and to which cases a change applies, are in each act at the `Source:` link of the commit.
-- ARLIS's links to case law, its tables of contents, and its English and Russian translations.
-- Renumbering: an article that moves to a new number appears as one file removed and another added.
-
-ARLIS's consolidated texts are marked official or unofficial. This repository is a research aid and is not an official publication. For the authoritative text, see the official publication cited at the `Source:` link.
+Each change is credited to the amending act ARLIS made that consolidated text for, by its number and adoption day (`ՀՕ-160-Ն (03.05.2023)`); one commit holds everything one act changed on one day. Where the article's own history note names another amending act that has no text of its own, the change goes to the latest such act (`Evidence:` says which rule applied).
 
 ## How it is checked
 
 - Before each push, `tools/in_force_on.py` is compared with ARLIS's own text for several articles and dates.
-- Every commit's trailers parse with `git interpret-trailers --parse`.
-- `main` has no merge commits, its commit dates never go backwards, and none of them is after the build day.
-- Two builds from the same retrieved texts give the same commit hashes.
+- Two builds from the same retrieved texts give the same commit hashes; the sha256 of every downloaded text is in [`data/texts-sha256.tsv`](data/texts-sha256.tsv) (see [`REPRODUCE.md`](REPRODUCE.md)).
+- A text less than half in Armenian letters is not used; the 3 such texts are listed in [`data/unreadable.csv`](data/unreadable.csv).
+- History is append-only: no merge commits, no rewriting, no commit dated in the future, and every commit's trailers parse.
 
-The sha256 of every downloaded text is in [`data/texts-sha256.tsv`](data/texts-sha256.tsv). See [`REPRODUCE.md`](REPRODUCE.md).
+## What it does not show
 
-## How it is built
+- **Sub-laws** (government and prime-minister decisions, ministerial orders) are not here; they are being built in [lexifina/armenia-sublaws](https://github.com/lexifina/armenia-sublaws).
+- **Texts ARLIS never made.** 479 amending acts it lists, to 102 laws, have no consolidated text ([`data/not-incorporated.csv`](data/not-incorporated.csv)); their changes arrive with the next text, so one commit may hold several acts' changes.
+- **Laws that only amend others** are commit authors, not files; their transitional provisions are in the act at each commit's `Source:` link.
+- **ARLIS's own additions:** its case-law links, tables of contents, and English and Russian translations.
 
-The record holds every Constitution, code and law found through ARLIS's search, leaving out acts that only amend others. For each law it uses the law's change history, which pairs amending acts with consolidated texts, and the print view of the original act and of every consolidated text. `parse_text.py` splits each text into articles and paragraphs. `build.py` compares each law's texts in date order and credits each change as above. It writes the whole history with one `git fast-import`. No AI model reads or writes any text, either in the build or in the checks.
+## Sources
+
+| Source | Kind | Past versions | Notes |
+| --- | --- | --- | --- |
+| [ARLIS](https://www.arlis.am) | Official legal information system of the Republic of Armenia | yes, every consolidated text with its period of application | Texts are marked official or unofficial; the authoritative text is the official publication cited at each commit's `Source:` link |
 
 ## Licence
 
-Source: ARLIS, the legal information system of the Republic of Armenia (www.arlis.am). Under article 4(1)(c) of the Law of the Republic of Armenia on Copyright and Related Rights (ՀՕ-142-Ն, 2006), official documents, including legal acts and their official translations, are not objects of copyright. The texts here were split into files and arranged as commits; their wording was not changed. Lexifina's own contributions (the tools, the arrangement and the commit messages) are CC0. See [`LICENSE`](LICENSE).
+See [`LICENSE`](LICENSE). Under article 4(1)(c) of the Law on Copyright and Related Rights (ՀՕ-142-Ն, 15 June 2006), official documents, legal acts among them, are not objects of copyright; the texts are reproduced without change to their wording. Lexifina's own contributions (tools, arrangement, commit messages and documentation) are CC0 1.0.
+
+No AI model reads, writes, summarises or classifies legal text; the scripts and documentation were written by an AI model (see [`REPRODUCE.md`](REPRODUCE.md)).
 
 ## More
 

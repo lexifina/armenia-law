@@ -13,7 +13,7 @@ Part of [lexifina/global-law](https://github.com/lexifina/global-law), one git h
 
 **What is in it now:** 42 codes and 1,337 laws from ARLIS, the official legal information system, and 4 acts ARLIS files as constitutions (the Constitution in its 1995, 2005 and 2015 texts, and the WHO Constitution), with 14,574 versions from 1961 to 2026-10-24. [`laws.csv`](laws.csv) lists every act read from ARLIS, with its link.
 
-Each act is in `<kind>/<year>/<number>/`, by the year it was adopted and its official number (`code/2004/ՀՕ-124-Ն/` is the ՀՀ աշխատանքային օրենսգիրք, the Labour Code, ՀՕ-124-Ն of 9 November 2004); acts without a number use their ARLIS id (`code/1961/id-5`). Each article is a file (`159.md`; article 327¹ is `327.1.md`), one paragraph per line. Until 2026-11-10 each folder was named by its ARLIS id (`code/51` is the Labour Code); `data/paths.json` maps every old name to its folder. `git blame` and `git log --follow` follow a file across that move; `git log` without `--follow` and `tools/in_force_on.py` need the old name for earlier versions.
+Each act is in `<kind>/<year>/<number>/`, by the year it was adopted and its official number (`code/2004/ՀՕ-124-Ն/` is the ՀՀ աշխատանքային օրենսգիրք, the Labour Code, ՀՕ-124-Ն of 9 November 2004); acts without a number use their ARLIS id (`code/1961/id-5`). Each article is a file (`159.md`; article 327¹ is `327.1.md`), one paragraph per line. Until 2026-11-10 each folder was named by its ARLIS id (`code/51` is the Labour Code); `data/paths.json` maps every old name to its folder. `git blame` and `git log --follow` follow a file across that move; `git log` without `--follow` needs the old name for earlier versions; `tools/in_force_on.py` takes either name.
 
 The text is in Armenian, the authoritative original, as ARLIS publishes it. An English translation is not part of this record.
 
@@ -24,7 +24,7 @@ The text is in Armenian, the authoritative original, as ARLIS publishes it. An E
 | Every change to Article 159 of the Labour Code (annual leave) | `git log -p --word-diff --follow -- code/2004/ՀՕ-124-Ն/159.md` |
 | Which act wrote each line of Article 159? | `git blame code/2004/ՀՕ-124-Ն/159.md` |
 | Every version of the Labour Code, with the day each took effect | `git log --format="%h %(trailers:key=In-force,valueonly,separator=) %an" -- code/2004/ՀՕ-124-Ն code/51` |
-| Article 159 as in force on 1 January 2015 | `python tools/in_force_on.py 2015-01-01 code/51 159` |
+| Article 159 as in force on 1 January 2015 | `python tools/in_force_on.py 2015-01-01 code/2004/ՀՕ-124-Ն 159` |
 
 **Outside git**, we also host this record publicly, for free:
 

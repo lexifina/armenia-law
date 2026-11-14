@@ -1,70 +1,95 @@
-# Armenian law, change by change
+# Հայաստան. իրավունքի պատմությունը git-ում
 
-The laws of the Republic of Armenia as a git repository: the Constitution, {{CODES}} codes and {{LAWS_ORDINARY}} laws from [ARLIS](https://www.arlis.am), the official legal information system of the Republic of Armenia. Each article is its own file, with one paragraph per line. Every change is a commit credited to the act that made it and dated the day the changed text took effect, at noon Yerevan time. The text is the Armenian original, which is the authoritative text.
+**Հայերեն** · **[Or read it in English](README.en.md)**
 
-On `main`, the record runs from {{FIRST}} to {{LAST}} in {{COMMITS}} commits, built from {{TEXTS}} texts: each law's original act plus every consolidated text ARLIS made of it. A further {{FUTURE_COMMITS}} commits apply after the build day and sit on the `future` branch.
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="data/hy/effort-dark.svg">
+<img alt="Հայաստանի իրավական ակտերն այս պահոցում՝ ինչ է պարունակում, փոփոխություններն ըստ ուժի մեջ մտնելու տարվա, ամբողջականությունը պաշտոնական աղբյուրների համեմատ և առկա բովանդակության ճշտությունը" src="data/hy/effort-light.svg" width="880">
+</picture>
 
-## A lawyer's questions as git commands
+Հայաստանի իրավունքը՝ որպես git պատմություն. մեկ ֆայլ՝ յուրաքանչյուր հոդվածի համար, մեկ commit՝ յուրաքանչյուր տարբերակի համար՝ դրա ուժի մեջ մտնելու օրը, իսկ commit-ի հեղինակն այն ակտն է, որը կատարել է փոփոխությունը։ `git blame`-ը նշում է յուրաքանչյուր պարբերության հետևում կանգնած ակտը, `git log`-ը թվարկում է հոդվածի բոլոր փոփոխությունները, իսկ ամսաթիվ ընտրելով՝ ստանում եք այդ օրը գործող տեքստը։
 
-| Question | Command |
+Մաս է կազմում [lexifina/global-law](https://github.com/lexifina/global-law) նախագծի՝ բոլոր երկրների իրավունքի մեկ git պատմության. սա Հայաստանի ազգային իրավունքն է, որը global-law-ն կարդում է `armenia/national/acts/` հասցեում։
+
+**Ինչ է պարունակում հիմա.** 42 օրենսգիրք և 1 337 օրենք ARLIS-ից՝ պաշտոնական իրավական տեղեկատվական համակարգից, և 4 ակտ, որոնք ARLIS-ը դասում է սահմանադրությունների շարքում (Սահմանադրությունը՝ իր 1995, 2005 և 2015 թվականների տեքստերով, և Առողջապահության համաշխարհային կազմակերպության սահմանադրությունը)՝ 14 574 տարբերակով՝ 1961 թվականից մինչև 2026-10-24։ [`laws.csv`](laws.csv)-ը թվարկում է ARLIS-ից կարդացված բոլոր ակտերը՝ իրենց հղումներով։
+
+Յուրաքանչյուր ակտ գտնվում է `<kind>/<year>/<number>/` թղթապանակում՝ ըստ ընդունման տարվա և պաշտոնական համարի (`code/2004/ՀՕ-124-Ն/`-ը ՀՀ աշխատանքային օրենսգիրքն է՝ ՀՕ-124-Ն, 2004 թվականի նոյեմբերի 9-ի). համար չունեցող ակտերը կրում են իրենց ARLIS id-ն (`code/1961/id-5`)։ Յուրաքանչյուր հոդված առանձին ֆայլ է (`159.md`. 327¹ հոդվածը `327.1.md`-ն է), յուրաքանչյուր պարբերություն՝ առանձին տող։ Մինչև 2026-11-10-ը յուրաքանչյուր թղթապանակ անվանված էր իր ARLIS id-ով (`code/51`-ը աշխատանքային օրենսգիրքն է). `data/paths.json`-ը յուրաքանչյուր հին անվանում կապում է իր թղթապանակի հետ։ `git blame`-ը և `git log --follow`-ը ֆայլին հետևում են նաև այդ տեղափոխությունից առաջ. `git log`-ը առանց `--follow`-ի ավելի վաղ տարբերակների համար պահանջում է հին անվանումը, իսկ `tools/in_force_on.py`-ն ընդունում է երկու անվանումն էլ։
+
+Տեքստը հայերեն է՝ վավերական բնօրինակը, այնպես, ինչպես այն հրապարակում է ARLIS-ը։ Անգլերեն թարգմանությունն այս գրառման մաս չէ։
+
+## Հարցերը՝ որպես git հրամաններ
+
+| Հարց | Հրաման |
 | --- | --- |
-| What did article 4 of the Law on Copyright and Related Rights say on 1 June 2012? | `python tools/in_force_on.py 2012-06-01 law/25161 4` |
-| The whole law on a date | `python tools/in_force_on.py 2012-06-01 law/25161` |
-| Which act last changed each paragraph of an article? | `git blame law/25161/4.md` |
-| Every change to an article, with the act behind it | `git log -p law/25161/4.md` |
-| The words that changed, not whole paragraphs | `git log -p --word-diff law/25161/4.md` |
-| Everything one act changed, across every law | `git log --author='ՀՕ-106-Ն' --stat` |
-| Every act that changed a law, in order | `git log --format='%(trailers:key=In-force,valueonly,separator=) %an' -- law/25161` |
-| What takes effect after today | `git log main..future` |
-| The list of laws, with their ARLIS links | [`laws.csv`](laws.csv) |
+| Աշխատանքային օրենսգրքի 159-րդ հոդվածի (ամենամյա արձակուրդ) բոլոր փոփոխությունները | `git log -p --word-diff --follow -- code/2004/ՀՕ-124-Ն/159.md` |
+| Ո՞ր ակտն է գրել 159-րդ հոդվածի յուրաքանչյուր տողը | `git blame code/2004/ՀՕ-124-Ն/159.md` |
+| Աշխատանքային օրենսգրքի բոլոր տարբերակները՝ յուրաքանչյուրի ուժի մեջ մտնելու օրով | `git log --format="%h %(trailers:key=In-force,valueonly,separator=) %an" -- code/2004/ՀՕ-124-Ն code/51` |
+| 159-րդ հոդվածը՝ 2015 թվականի հունվարի 1-ին գործող խմբագրությամբ | `python tools/in_force_on.py 2015-01-01 code/2004/ՀՕ-124-Ն 159` |
 
-Use `tools/in_force_on.py` for "on this date" questions rather than `git log --before`. It picks the text by the `In-force:` trailer, so it is right in any time zone and for dates before 1970. If you use raw git, write the time out in full: `git rev-list -1 --before="2012-06-01T23:59:59+04:00" main`. In PowerShell, `git show "$(git rev-list -1 --before=... main):law/25161/4.md"` needs the quotes.
+**Git-ից դուրս** այս գրառումը նաև հրապարակում ենք հանրայնորեն և անվճար.
 
-Folders are `constitution/`, `code/` and `law/`, and each law's folder is named after its ARLIS number, the `N` in `arlis.am/hy/acts/N`. Inside it there is one file per article (`4.md`, `22.1.md`; a superscript article such as 327¹ becomes `327.1.md`), one per appendix (`annex-1.md`), and `title.md` for the text before the first article. An article file starts with the Part and Chapter headings above it (`##`), then the heading line (`# Հոդված 4. …`), then one line per paragraph. Each article's own history note, such as `(4-րդ հոդվածը լրաց. 30.09.13 ՀՕ-106-Ն)`, is kept as a line, exactly as ARLIS prints it.
+- **[Հարցրեք Claude-ին Հայաստանի իրավունքի մասին](https://global-law.lexifina.com/v1/try_claude?country=armenia)**: բացում է Claude-ը՝ պատրաստի առաջին հարցով։
+- **[Հարցրեք ChatGPT-ին](https://global-law.lexifina.com/v1/try_chatgpt?country=armenia)**: նույն հարցը ChatGPT-ում։
+- **[Կանչեք API-ն ձեր դիտարկիչում](https://global-law.lexifina.com/v1/search_law?query=%D5%A1%D5%B4%D5%A5%D5%B6%D5%A1%D5%B4%D5%B5%D5%A1+%D5%A1%D6%80%D5%B1%D5%A1%D5%AF%D5%B8%D6%82%D6%80%D5%A4&jurisdictions=armenia)**: «ամենամյա արձակուրդ» բառերի որոնում Հայաստանի իրավունքում, պատասխանը՝ JSON ձևաչափով։ Փաստաթղթերը [այստեղ են](https://lexifina.com/api/global-law)։
 
-## The dates, and which one we use
+Երկու օգնականներն էլ գրառումը կարդում են անվճար Global law կոնեկտորի միջոցով (MCP, `https://global-law.lexifina.com/mcp`). առաջին անգամ զրույցը ձեզ կտա այն ավելացնելու հղումը։ Հարցրեք հայերեն կամ անգլերեն։
 
-ARLIS keeps every consolidated text it made of a law and gives each one its period of application, for example `Գործում է (01.09.2026-01.11.2026)`. **Commits are dated by the first day of that period.** That date decides which text governs a case, and it is the day the changes in that text took effect. The amending act's adoption date is in the `Enacted:` trailer. In {{RETROACTIVE}} commits, the text applies from a day before the act was adopted (retroactive effect). Those commits keep the in-force date and show the adoption date.
+**Հեշտությամբ գործարկեք այն ինքներդ։** Բավական են git-ը և Python-ը, իսկ գործիքներն աշխատում են ձեր համակարգչում.
 
-The first commit of each law is its original act (`Kind: original`), dated the day the law took effect. Laws older than ARLIS's consolidated texts may be missing some intermediate texts. Their next commit can then carry several amendments at once (see "what author means").
+```sh
+git clone --depth 1 https://github.com/lexifina/global-law && cd global-law
+python3 tools/countries.py add armenia/national/acts
+python3 tools/law.py show 2026-01-01 armenia/national/acts/code/2004/ՀՕ-124-Ն/159.md
+```
 
-**Git cannot store dates before 1970.** Laws that took effect earlier (Soviet-era codes) are committed on 1970-01-01, one second apart and in order. Their real date is in the `In-force:` trailer, which `tools/in_force_on.py` reads.
+Claude Code-ում, Cursor-ում, VS Code-ում կամ Codex-ում բացված կլոնը գործարկում է նաև տեղային MCP սերվեր՝ նույն գործիքներով ([MCP.md](https://github.com/lexifina/global-law/blob/main/MCP.md))։
 
-**Texts that apply after the build day** are on the branch `future`, which starts at the tip of `main` and is never merged into it, so `main` never shows text that is not yet law. After a rebuild, run `git fetch --force origin future`.
+## Ամսաթվեր
 
-## What "author" means
+Յուրաքանչյուր commit թվագրված է կեսօրով՝ Երևանի ժամանակով (Asia/Yerevan), այն օրով, երբ տարբերակն ուժի մեջ է մտել, և այդ օրը նշված է նաև դրա `In-force:` դաշտում (trailer).
 
-The author of a commit is the act that made the change, at an address that cannot exist, for example `ՀՕ-106-Ն (30.09.2013) <ho-106-n-20130930@arlis.invalid>`. The number is the act's official number (ՀՕ = law of the Republic of Armenia) and the date is its adoption date. So `git blame` names, for each paragraph, the act that last wrote it. One commit holds everything one act changed on one day, across every law it touched.
+- համախմբված տեքստի համար՝ կիրառման ժամանակահատվածի առաջին օրը, որը նշում է ARLIS-ը (`Գործում է (01.09.2026-01.11.2026)`). փոփոխող ակտի ընդունման օրը `Enacted:` դաշտում է.
+- օրենքի առաջին commit-ի՝ դրա սկզբնական ակտի (`Kind: original`) համար՝ ARLIS-ի նշած ուժի մեջ մտնելու օրը.
+- git-ը չի կարող պահել 1970 թվականից առաջ ամսաթվեր, ուստի ավելի վաղ 10 commit-ները (խորհրդային շրջանի օրենսգրքեր և օրենքներ) թվագրված են 1970-01-01-ից սկսած՝ միմյանցից մեկ վայրկյան տարբերությամբ, իսկ իրական օրը `In-force:` դաշտում է։ Ամսաթվով հարցերի համար օգտագործեք `tools/in_force_on.py`-ը, ոչ թե `git log --before`-ը.
+- կառուցման օրվանից (2026-10-28) հետո կիրառվող տեքստերը գտնվում են `future` ճյուղում, որը երբեք չի միաձուլվում `main`-ի մեջ։
 
-ARLIS pairs every consolidated text with the one amending act it was made for, and that act is credited (`Evidence: edition`). Where the changed article's own history note newly names that act, the evidence is `note`. Where the note instead newly names another amending act of the same law, one that has no consolidated text of its own, the change goes to the latest such act (`Evidence: note (no text of its own)`). Amending acts that ARLIS lists but never made a text for ({{NOT_INCORPORATED}}) are in [`data/not-incorporated.csv`](data/not-incorporated.csv). Their changes reach this record only through the next text that was made.
+Յուրաքանչյուր փոփոխություն վերագրվում է այն փոփոխող ակտին, որի համար ARLIS-ը պատրաստել է տվյալ համախմբված տեքստը՝ դրա համարով և ընդունման օրով (`ՀՕ-160-Ն (03.05.2023)`). մեկ commit-ը պարունակում է այն ամենը, ինչ մեկ ակտը փոխել է մեկ օրում։ Եթե հոդվածի պատմության սեփական նշումը նշում է մեկ այլ փոփոխող ակտ, որը սեփական տեքստ չունի, փոփոխությունը վերագրվում է այդպիսի վերջին ակտին (`Evidence:` դաշտը ցույց է տալիս, թե որ կանոնն է կիրառվել)։
 
-Evidence counts by changed unit: note {{EVIDENCE_NOTE}}, edition {{EVIDENCE_EDITION}}, note with no text of its own {{EVIDENCE_CAUGHT_UP}}. In all there are {{ORIGINAL}} original acts and {{AMENDMENT}} amendment commits by {{AMENDING_ACTS}} amending acts.
+## Ինչպես է այն ստուգվում
 
-Blame credits whole paragraphs. A paragraph changed by two acts names only the later one, so use `git log -p --word-diff` to see each act's words.
+- Յուրաքանչյուր push-ից առաջ `tools/in_force_on.py`-ի արդյունքը համեմատվում է ARLIS-ի սեփական տեքստի հետ մի քանի հոդվածի և ամսաթվի համար։
+- Նույն ստացված տեքստերից երկու կառուցում տալիս են նույն commit hash-երը. յուրաքանչյուր ներբեռնված տեքստի sha256-ը [`data/texts-sha256.tsv`](data/texts-sha256.tsv) ֆայլում է (տե՛ս [`REPRODUCE.md`](REPRODUCE.md))։
+- Տեքստը, որի տառերի կեսից պակասն է հայերեն, չի օգտագործվում. այդպիսի 3 տեքստը թվարկված է [`data/unreadable.csv`](data/unreadable.csv) ֆայլում։
+- Պատմությունը միայն լրացվում է. չկան միաձուլման (merge) commit-ներ, պատմությունը չի վերագրվում, չկա ապագա ամսաթվով commit, և յուրաքանչյուր commit-ի դաշտերը (trailers) ճիշտ ձևաչափ ունեն։
 
-## What it does not show
+## Ինչ այն ցույց չի տալիս
 
-- Sub-laws: government decisions, ministerial orders and other acts below the level of law. They are not in this build.
-- Texts ARLIS has not consolidated (see above), and texts it could not serve or we could not read ({{UNREADABLE}}, in [`data/unreadable.csv`](data/unreadable.csv)).
-- Laws whose only purpose is to amend others. They are the authors of commits here, not files. Their own transitional provisions, which say when and to which cases a change applies, are in each act at the `Source:` link of the commit.
-- ARLIS's links to case law, its tables of contents, and its English and Russian translations.
-- Renumbering: an article that moves to a new number appears as one file removed and another added.
+- **Ենթաօրենսդրական ակտերը** (կառավարության և վարչապետի որոշումները, նախարարների հրամանները) այստեղ չեն. դրանք կառուցվում են [lexifina/armenia-sublaws](https://github.com/lexifina/armenia-sublaws) պահոցում։
+- **Տեքստերը, որոնք ARLIS-ը երբեք չի պատրաստել։** Նրա թվարկած 479 փոփոխող ակտ՝ 102 օրենքի, համախմբված տեքստ չունի ([`data/not-incorporated.csv`](data/not-incorporated.csv)). դրանց փոփոխությունները հայտնվում են հաջորդ տեքստի հետ, ուստի մեկ commit-ը կարող է պարունակել մի քանի ակտի փոփոխություններ։
+- **Միայն այլ օրենքներ փոփոխող օրենքները** commit-ների հեղինակներ են, ոչ թե ֆայլեր. դրանց անցումային դրույթները գտնվում են ակտում՝ յուրաքանչյուր commit-ի `Source:` հղումով։
+- **ARLIS-ի սեփական հավելումները**՝ դատական պրակտիկայի հղումները, բովանդակության ցանկերը, անգլերեն և ռուսերեն թարգմանությունները։
 
-ARLIS's consolidated texts are marked official or unofficial. This repository is a research aid and is not an official publication. For the authoritative text, see the official publication cited at the `Source:` link.
+## Աղբյուրներ
 
-## How it is checked
+| Աղբյուր | Տեսակ | Նախկին տարբերակներ | Նշումներ |
+| --- | --- | --- | --- |
+| [ARLIS](https://www.arlis.am) | Հայաստանի Հանրապետության պաշտոնական իրավական տեղեկատվական համակարգ | այո, յուրաքանչյուր համախմբված տեքստ՝ իր կիրառման ժամանակահատվածով | Տեքստերը նշված են որպես պաշտոնական կամ ոչ պաշտոնական. վավերական տեքստը յուրաքանչյուր commit-ի `Source:` հղումով նշված պաշտոնական հրապարակումն է |
 
-- Before each push, `tools/in_force_on.py` is compared with ARLIS's own text for several articles and dates.
-- Every commit's trailers parse with `git interpret-trailers --parse`.
-- `main` has no merge commits, its commit dates never go backwards, and none of them is after the build day.
-- Two builds from the same retrieved texts give the same commit hashes.
+## Լիցենզիա
 
-The sha256 of every downloaded text is in [`data/texts-sha256.tsv`](data/texts-sha256.tsv). See [`REPRODUCE.md`](REPRODUCE.md).
+Տե՛ս [`LICENSE`](LICENSE)։ «Հեղինակային իրավունքի և հարակից իրավունքների մասին» օրենքի (ՀՕ-142-Ն, 2006 թվականի հունիսի 15) 4-րդ հոդվածի 1-ին մասի «գ» կետի համաձայն՝ պաշտոնական փաստաթղթերը, այդ թվում՝ իրավական ակտերը, հեղինակային իրավունքի օբյեկտ չեն. տեքստերը վերարտադրված են առանց դրանց ձևակերպումը փոխելու։ Lexifina-ի սեփական ներդրումները (գործիքները, դասավորությունը, commit-ների հաղորդագրությունները և փաստաթղթերը) տրամադրվում են CC0 1.0 պայմաններով։
 
-## How it is built
+Ոչ մի AI մոդել չի կարդում, գրում, ամփոփում կամ դասակարգում իրավական տեքստ. սկրիպտները և փաստաթղթերը գրել է AI մոդելը (տե՛ս [`REPRODUCE.md`](REPRODUCE.md))։
 
-The record holds every Constitution, code and law found through ARLIS's search, leaving out acts that only amend others. For each law it uses the law's change history, which pairs amending acts with consolidated texts, and the print view of the original act and of every consolidated text. `parse_text.py` splits each text into articles and paragraphs. `build.py` compares each law's texts in date order and credits each change as above. It writes the whole history with one `git fast-import`. No AI model reads or writes any text, either in the build or in the checks.
+Սա անգլերեն տարբերակի ([README.en.md](README.en.md)) թարգմանությունն է։ Եթե դրանք տարբերվում են, գերակայում է անգլերեն տարբերակը։
 
-## Licence
+## Ավելին
 
-Source: ARLIS, the legal information system of the Republic of Armenia (www.arlis.am). Under article 4(1)(c) of the Law of the Republic of Armenia on Copyright and Related Rights (ՀՕ-142-Ն, 2006), official documents, including legal acts and their official translations, are not objects of copyright. The texts here were split into files and arranged as commits; their wording was not changed. Lexifina's own contributions (the tools, the arrangement and the commit messages) are CC0. See [`LICENSE`](LICENSE).
+[lexifina/global-law](https://github.com/lexifina/global-law) պահոցից (անգլերեն)՝
+
+- [FEATURES.md](https://github.com/lexifina/global-law/blob/main/FEATURES.md): բոլոր հնարավորությունները և այն, ինչ պետք է աջակցի յուրաքանչյուր կորպուս (`git blame`, `law.py`, MCP գործիքներ)
+- [FAQ.md](https://github.com/lexifina/global-law/blob/main/FAQ.md): հարցեր և պատասխաններ · [CONTRIBUTING.md](https://github.com/lexifina/global-law/blob/main/CONTRIBUTING.md): ինչպես առաջարկել փոփոխություններ · [MCP.md](https://github.com/lexifina/global-law/blob/main/MCP.md): MCP սերվեր · [REPRODUCE.md](https://github.com/lexifina/global-law/blob/main/REPRODUCE.md): ինչպես է այն կառուցված · [CHANGELOG.md](https://github.com/lexifina/global-law/blob/main/CHANGELOG.md)
+- [FRESHNESS.md](https://github.com/lexifina/global-law/blob/main/FRESHNESS.md): որքան արդիական է յուրաքանչյուր կորպուս · [Մոնիտորինգ](https://github.com/lexifina/global-law/tree/main/monitoring): արդյոք թարմացումներն աշխատում են · [WATCHING.md](https://github.com/lexifina/global-law/blob/main/WATCHING.md): ինչպես է յուրաքանչյուր պաշտոնական աղբյուր հետևվում փոփոխությունների համար
+- [performance/](https://github.com/lexifina/global-law/tree/main/performance): որքան արագ են գործիքները, չափված
+- [visualisations/](https://github.com/lexifina/global-law/tree/main/visualisations): գծապատկերներ և կապեր ամբողջ աշխարհի իրավունքում
+- [Խոցելիություններ](https://github.com/lexifina/global-law/tree/main/vulnerabilities): սխալներ ակտերում՝ այնպես, ինչպես դրանք հրապարակվել են

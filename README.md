@@ -30,7 +30,8 @@
 
 - **[Հարցրեք Claude-ին Հայաստանի իրավունքի մասին](https://global-law.lexifina.com/v1/try_claude?country=armenia)**: բացում է Claude-ը՝ պատրաստի առաջին հարցով։
 - **[Հարցրեք ChatGPT-ին](https://global-law.lexifina.com/v1/try_chatgpt?country=armenia)**: նույն հարցը ChatGPT-ում։
-- **[Կանչեք API-ն ձեր դիտարկիչում](https://global-law.lexifina.com/v1/search_law?query=%D5%A1%D5%B4%D5%A5%D5%B6%D5%A1%D5%B4%D5%B5%D5%A1+%D5%A1%D6%80%D5%B1%D5%A1%D5%AF%D5%B8%D6%82%D6%80%D5%A4&jurisdictions=armenia)**: «ամենամյա արձակուրդ» բառերի որոնում Հայաստանի իրավունքում, պատասխանը՝ JSON ձևաչափով։ Փաստաթղթերը [այստեղ են](https://lexifina.com/api/global-law)։
+- **[Որոնեք Հայաստանի իրավունքում մեր կայքում](https://lexifina.com/law?country=armenia&q=%D5%A1%D5%B4%D5%A5%D5%B6%D5%A1%D5%B4%D5%B5%D5%A1+%D5%A1%D6%80%D5%B1%D5%A1%D5%AF%D5%B8%D6%82%D6%80%D5%A4)**: «ամենամյա արձակուրդ» բառերի որոնում՝ յուրաքանչյուր դրույթի տեքստով և դրա տարբերակներով, առանց հաշվի։
+- **[REST API ծրագրավորողների համար](https://global-law.lexifina.com/v1/search_law?query=%D5%A1%D5%B4%D5%A5%D5%B6%D5%A1%D5%B4%D5%B5%D5%A1+%D5%A1%D6%80%D5%B1%D5%A1%D5%AF%D5%B8%D6%82%D6%80%D5%A4&jurisdiction=armenia)**: նույն որոնումը JSON ձևաչափով, առանց բանալու։ Փաստաթղթերը [այստեղ են](https://lexifina.com/api/global-law)։
 
 Երկու օգնականներն էլ գրառումը կարդում են անվճար Global law կոնեկտորի միջոցով (MCP, `https://global-law.lexifina.com/mcp`). առաջին անգամ զրույցը ձեզ կտա այն ավելացնելու հղումը։ Հարցրեք հայերեն կամ անգլերեն։
 

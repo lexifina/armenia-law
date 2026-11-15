@@ -30,7 +30,8 @@ The text is in Armenian, the authoritative original, as ARLIS publishes it. An E
 
 - **[Ask Claude about Armenian law](https://global-law.lexifina.com/v1/try_claude?country=armenia)**: opens Claude with a first question ready.
 - **[Ask ChatGPT](https://global-law.lexifina.com/v1/try_chatgpt?country=armenia)**: the same question in ChatGPT.
-- **[Call the API in your browser](https://global-law.lexifina.com/v1/search_law?query=%D5%A1%D5%B4%D5%A5%D5%B6%D5%A1%D5%B4%D5%B5%D5%A1+%D5%A1%D6%80%D5%B1%D5%A1%D5%AF%D5%B8%D6%82%D6%80%D5%A4&jurisdictions=armenia)**: a search of Armenian law for "ամենամյա արձակուրդ" (annual leave), returned as JSON. See the [documentation here](https://lexifina.com/api/global-law).
+- **[Search Armenian law on our site](https://lexifina.com/law?country=armenia&q=%D5%A1%D5%B4%D5%A5%D5%B6%D5%A1%D5%B4%D5%B5%D5%A1+%D5%A1%D6%80%D5%B1%D5%A1%D5%AF%D5%B8%D6%82%D6%80%D5%A4)**: a search for "ամենամյա արձակուրդ" (annual leave), with each provision's text and its versions, no account needed.
+- **[Developer REST API](https://global-law.lexifina.com/v1/search_law?query=%D5%A1%D5%B4%D5%A5%D5%B6%D5%A1%D5%B4%D5%B5%D5%A1+%D5%A1%D6%80%D5%B1%D5%A1%D5%AF%D5%B8%D6%82%D6%80%D5%A4&jurisdiction=armenia)**: the same search as JSON, with no key. See the [documentation here](https://lexifina.com/api/global-law).
 
 Both assistants read the record through the free Global law connector (MCP, `https://global-law.lexifina.com/mcp`); the first time, the chat gives you the link that adds it. Ask in Armenian or in English.
 

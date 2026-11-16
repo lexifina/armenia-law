@@ -62,6 +62,7 @@ Each change is credited to the amending act ARLIS made that consolidated text fo
 - Two builds from the same retrieved texts give the same commit hashes; the sha256 of every downloaded text is in [`data/texts-sha256.tsv`](data/texts-sha256.tsv) (see [`REPRODUCE.md`](REPRODUCE.md)).
 - A text less than half in Armenian letters is not used; the 3 such texts are listed in [`data/unreadable.csv`](data/unreadable.csv).
 - History is append-only: no merge commits, no rewriting, no commit dated in the future, and every commit's trailers parse.
+- [vulnerabilities/](vulnerabilities/README.en.md): possible drafting mistakes in this law, found by global-law's detectors and checked by hand. Not run yet.
 
 ## What it does not show
 
@@ -81,6 +82,10 @@ Each change is credited to the amending act ARLIS made that consolidated text fo
 See [`LICENSE`](LICENSE). Under article 4(1)(c) of the Law on Copyright and Related Rights (ՀՕ-142-Ն, 15 June 2006), official documents, legal acts among them, are not objects of copyright; the texts are reproduced without change to their wording. Lexifina's own contributions (tools, arrangement, commit messages and documentation) are CC0 1.0.
 
 No AI model reads, writes, summarises or classifies legal text; the scripts and documentation were written by an AI model (see [`REPRODUCE.md`](REPRODUCE.md)).
+
+## Visualisations
+
+- [visualisations/](visualisations/README.en.md): charts drawn from this repository. Not drawn yet.
 
 ## More
 
